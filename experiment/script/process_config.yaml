@@ -1,0 +1,52 @@
+# Log Sample 处理配置文件
+# 只需修改此文件即可控制处理流程
+
+# ============================================================
+# 数据路径配置
+# ============================================================
+log_sample_path: "/mnt/nas/chenhaotian/lm-evaluation-harness/results/__datacenter__models__Qwen__Qwen2.5-0.5B/samples_dapo_cot_self_consistent_2026-01-28T08-02-45.556137.jsonl"
+
+# 输出路径（留空时保存到默认路径 ./results/）
+output_path: ""
+
+# ============================================================
+# 模型配置
+# ============================================================
+model_name_or_path: "/datacenter/models/Qwen/Qwen3-4B-Instruct-2507"
+
+# ============================================================
+# Response 处理配置
+# ============================================================
+# 选择第几个 response（从 0 开始，-1 表示所有）
+response_index: -1
+
+# 截断阈值：
+# - 整数 (如 100): 保留前 100 个 tokens
+# - 浮点数 0-1 之间 (如 0.5): 保留 50% 的 tokens
+# - 1.0 或负数: 不截断
+truncate_threshold: 0.1
+
+# 输出结果新增的 key 名称（用于保存 apply_chat_template 后的文本）
+output_key: "text"
+
+# 是否启用 thinking 模式（Qwen3 non-thinking 模型应设为 false）
+enable_thinking: false
+
+# ============================================================
+# 提示词模板配置 (Jinja2 格式)
+# ============================================================
+# 可用变量:
+#   - {{ question }}: doc 中的 question 字段
+#   - {{ doc }}: 完整的 doc 对象，可访问其他字段如 {{ doc.answer }}
+#
+# 预定义模板选择（取消注释即可使用）:
+
+# 模板1: GSM8K 风格 - CoT + 最终答案格式
+doc_to_text_template: "{{doc['prompt'][0]['content']}}"
+
+# 模板5: 自定义（可自由编写）
+# doc_to_text_template: |
+#   Problem: {{ question }}
+#   
+#   Instructions: Think carefully and solve this step by step.
+#   Format your final answer as: The answer is [X].
