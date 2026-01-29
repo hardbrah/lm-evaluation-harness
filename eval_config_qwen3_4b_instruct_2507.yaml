@@ -3,17 +3,18 @@ trust_remote_code: true
 device: cuda  # 设置为 cuda（配合 CUDA_VISIBLE_DEVICES 环境变量使用）
 model_args:
   pretrained: /datacenter/models/Qwen/Qwen3-4B-Instruct-2507
-  max_model_len: 32768
-  tensor_parallel_size: 1
-  data_parallel_size: 8
+  max_model_len: 4096
+  tensor_parallel_size: 8
+  # data_parallel_size 仅对 MoE/稀疏模型有效，dense 模型需设为 1
+  data_parallel_size: 1
   dtype: auto
   gpu_memory_utilization: 0.95
 
 tasks:
-  - dapo_cot_self_consistent
+  - gsm8k_repeat
 
 # 限制数据集大小（用于测试）
-limit: 1000
+# limit: 10
 
 # 使用pre-filling技术和raw_prompt，禁用chat template
 apply_chat_template: true
@@ -28,4 +29,4 @@ log_samples: true
 # WandB 日志设置（可选）
 wandb_args:
   project: lmeval-qwen3-4b-instruct
-  name: dapo_cot_self_consistent_qwen3_4b
+  name: gsm8k_repeat64_qwen3_4b_instruct_2507

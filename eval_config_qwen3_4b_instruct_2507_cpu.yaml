@@ -1,0 +1,23 @@
+model: hf
+trust_remote_code: true
+device: cpu  # 设置为 cuda（配合 CUDA_VISIBLE_DEVICES 环境变量使用）
+model_args:
+  pretrained: /datacenter/models/Qwen/Qwen2.5-0.5B
+  max_length: 4096
+  dtype: bfloat16
+
+tasks:
+  - dapo_continue_generation
+
+# 限制数据集大小（用于测试）
+limit: 5
+
+# 使用pre-filling技术和raw_prompt，禁用chat template
+apply_chat_template: false
+
+# 缓存设置
+cache_requests: refresh
+
+# 输出设置
+output_path: ./results/
+log_samples: true
