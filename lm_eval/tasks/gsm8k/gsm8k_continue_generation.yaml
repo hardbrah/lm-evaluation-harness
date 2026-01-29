@@ -1,0 +1,47 @@
+tag:
+  - math_word_problems
+task: gsm8k_continue_generation
+dataset_path: json
+dataset_name: null
+dataset_kwargs:
+  data_files:
+    test: "/mnt/nas/chenhaotian/lm-evaluation-harness/experiment/script/results/samples_gsm8k_repeat_2026-01-29T04-39-38.802587_processed.jsonl"
+test_split: test
+output_type: generate_until
+doc_to_text: "{{text}}"
+doc_to_target: "{{doc['answer']}}"
+metric_list:
+  - metric: exact_match
+    aggregation: mean
+    higher_is_better: true
+    ignore_case: true
+    ignore_punctuation: false
+    regexes_to_ignore:
+      - ","
+      - "\\$"
+      - "(?s).*#### "
+      - "\\.$"
+generation_kwargs:
+  until:
+    - "Question:"
+    - "</s>"
+    - "<|im_end|>"
+  do_sample: true
+  temperature: 0.7
+  top_p: 0.80
+repeats: 4
+num_fewshot: 0
+filter_list:
+  - name: "strict-match"
+    filter:
+      - function: "regex"
+        regex_pattern: "#### (\\-?[0-9\\.\\,]+)"
+      - function: "take_first"
+  - name: "flexible-extract"
+    filter:
+      - function: "regex"
+        group_select: -1
+        regex_pattern: "(-?[$0-9.,]{2,})|(-?[0-9]+)"
+      - function: "take_first"
+metadata:
+  version: 3.0
